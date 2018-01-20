@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import logo from '../assets/logo.svg';
 import './App.css';
+import {RemoteClient} from "./common/data/remoteClient";
 
 class App extends Component {
+    constructor(){
+        super();
+        RemoteClient.get("posts/1").subscribe((data)=>{
+            console.log(data);
+        });
+    }
+
     render() {
         return (<div className="App">
             <header className="App-header">
