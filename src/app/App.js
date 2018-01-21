@@ -6,7 +6,16 @@ import {RemoteClient} from "./common/data/remoteClient";
 class App extends Component {
     constructor(){
         super();
-        RemoteClient.get("posts/1").subscribe((data)=>{
+        this.init();
+    }
+
+    init(){
+        let payload ={
+            data :{
+                name:"priyanka premkumar"
+            }
+        }
+        RemoteClient.post("posts",payload).subscribe((data)=>{
             console.log(data);
         });
     }

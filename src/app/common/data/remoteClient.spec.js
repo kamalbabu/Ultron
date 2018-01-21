@@ -4,12 +4,19 @@ describe("Remote Client", () => {
 
     it("Implements GET method", () => {
         RemoteClient.get("posts/1").subscribe((response)=>{
-            expect(response).toBeTruthy();
+            expect(response.status).toBe(200);
         })
     });
 
     it("Implements POST method", () => {
-        expect(1).toBeTruthy();
+        let payload ={
+            data:{
+                name:"Priyanka kamal"
+            }
+        }
+        RemoteClient.get("posts",payload).subscribe((response)=>{
+            expect(response.status).toBe(201);
+        })
     });
 
     it("Implements PUT method", () => {
