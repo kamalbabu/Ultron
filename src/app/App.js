@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../assets/logo.svg';
 import './App.css';
-import {RemoteClient} from "./common/data/remoteClient";
+import {RemoteClient} from "../shared/data/remoteClient";
 
 class App extends Component {
     constructor(){
@@ -10,6 +10,10 @@ class App extends Component {
     }
 
     init(){
+        RemoteClient.addRequestInterceptor(function(payload){
+            console.log("hello");
+        })
+
         let payload ={
             data :{
                 name:"priyanka premkumar"
@@ -23,7 +27,6 @@ class App extends Component {
     render() {
         return (<div className="App">
             <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
                 <h1 className="App-title">Welcome to React</h1>
             </header>
             <p className="App-intro">

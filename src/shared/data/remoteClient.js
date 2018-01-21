@@ -2,8 +2,19 @@ import { Observable } from "rxjs";
 
 class RemoteClient {
     baseUrl = "";
+    requestInterceptors =[];
+    responseInterceptors=[];
+
     constructor(baseUrl){
         this.baseUrl=baseUrl;
+    }
+    
+    addRequestInterceptor(inteceptors){
+        this.requestInterceptors.push(...inteceptors);
+    }
+
+    addResponseInterceptor(inteceptors){
+        this.responseInterceptors.push(...inteceptors);
     }
 
     get(url,payload){
@@ -56,17 +67,7 @@ let rc  = new RemoteClient("https://jsonplaceholder.typicode.com");
 export {rc as RemoteClient};
 
 
-class Interceptors{
-    requestInterceptors =[];
-    responseInterceptors=[];
-
+class RemoteInterceptors{
     
-    addRequestInterceptor(inteceptors){
-        this.requestInterceptors.push(...inteceptors);
-    }
-
-    addResponseInterceptor(inteceptors){
-        this.responseInterceptors.push(...inteceptors);
-    }
 
 }
