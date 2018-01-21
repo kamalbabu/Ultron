@@ -16,7 +16,7 @@ class App extends Component {
 
         let payload ={
             data :{
-                name:"priyanka premkumar"
+                name:"John Smith"
             }
         }
         RemoteClient.post("posts",payload).subscribe((data)=>{
