@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 import {HttpClient} from "./http/httpClient";
-import {WebSocketClient} from "./ws/wsClient";
+import {WebSocketClient} from "./ws/websocketClient";
 import * as AppConfig from "../../config/appConfig"
 
 class RemoteClient {    

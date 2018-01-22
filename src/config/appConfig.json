@@ -1,0 +1,7 @@
+{
+    "remoteApi":{
+        "mode":"ws",
+        "secure":false,
+        "url" :"ws://localhost:1337"
+    }
+}
