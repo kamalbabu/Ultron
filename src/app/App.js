@@ -1,29 +1,14 @@
 import React, { Component } from 'react';
 import logo from '../assets/logo.svg';
 import './App.css';
-import {RemoteClient} from "../shared/data/remoteClient";
+import {WsNativeClient} from "../shared/data/ws/wsNativeClient";
 
 class App extends Component {
     constructor(){
         super();
-        this.init();
+        let socket = new WsNativeClient("wss://echo.websocket.org");
+       socket.send("hello");
     }
-
-    init(){
-        RemoteClient.addRequestInterceptor(function(payload){
-            console.log("hello");
-        })
-
-        let payload ={
-            data :{
-                name:"John Smith"
-            }
-        }
-        RemoteClient.post("posts",payload).subscribe((data)=>{
-            console.log(data);
-        });
-    }
-
     render() {
         return (<div className="App">
             <header className="App-header">

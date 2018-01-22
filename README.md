@@ -1,7 +1,7 @@
 # Ultron
 Opionionated frond end framework
 
-<WORK IN PROGRESS>
+WORK IN PROGRESS
 
 ## Todo 
 

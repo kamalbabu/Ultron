@@ -1,14 +1,36 @@
 import { Observable } from "rxjs";
+import {HttpClient} from "./http/httpClient";
+import {WebSocketClient} from "./ws/wsClient";
+import * as AppConfig from "../../config/appConfig"
 
-class RemoteClient {
-    baseUrl = "";
-    requestInterceptors =[];
-    responseInterceptors=[];
+class RemoteClient {    
+  
+    
+    constructor(){
+        this.initClient();
+        this.requestInterceptors =[];
+        this.responseInterceptors=[];
+    }
 
-    constructor(baseUrl){
-        this.baseUrl=baseUrl;
+    static getInstance(){
+        if(RemoteClient.instance===null || RemoteClient.instance===undefined){
+            RemoteClient.instance = new RemoteClient();
+            return RemoteClient.instance;
+        }else{
+            return RemoteClient.instance;
+        }
     }
     
+    initClient(){        
+        let remoteApiConfig = AppConfig["remoteApi"];                
+        let url = remoteApiConfig["url"];
+        if(remoteApiConfig["mode"]==="http"){
+            this.instance = new HttpClient();
+        }else  if(remoteApiConfig["mode"]==="ws"){
+            this.instance = new WebSocketClient(url);
+        }
+    }
+
     addRequestInterceptor(inteceptors){
         this.requestInterceptors.push(...inteceptors);
     }
@@ -17,57 +39,59 @@ class RemoteClient {
         this.responseInterceptors.push(...inteceptors);
     }
 
-    get(url,payload){
-        let options ={
-            method: "GET", 
-            headers: new Headers({
-              'Content-Type': 'application/json'
-            })
+    get(url,payload){        
+        if(RemoteClient.instance.instance instanceof HttpClient){
+            return RemoteClient.instance.instance.get(url,payload);
+        }else if(RemoteClient.instance.instance instanceof WebSocketClient){
+
+            let data = {
+                method:"GET",
+                url :url,
+                payload:payload
+            }
+            return RemoteClient.instance.instance.send(JSON.stringify(data));
         }
-        let fetchPromise = fetch(`${this.baseUrl}/${url}`,options);
-       return Observable.from(fetchPromise);
     }
 
     post(url,payload){
-        let options ={
-            method: "POST", // or 'PUT'
-            body: JSON.stringify(payload.data), 
-            headers: new Headers({
-              'Content-Type': 'application/json'
-            })
+       if(RemoteClient.instance instanceof HttpClient){
+            RemoteClient.instance.post(url,payload);
+        }else if(RemoteClient.instance instanceof WebSocketClient){
+
+            let data = {
+                method:"POST",
+                url :url,
+                payload:payload
+            }            
+            RemoteClient.instance.send(JSON.stringify(data));
         }
-        let fetchPromise = fetch(`${this.baseUrl}/${url}`,options);
-        return Observable.from(fetchPromise);
     }
 
     put(url,payload){
-        let options ={
-            method: "PUT", // or 'PUT'
-            body: JSON.stringify(payload.data), 
-            headers: new Headers({
-              'Content-Type': 'application/json'
-            })
+        if(RemoteClient.instance instanceof HttpClient){
+            RemoteClient.instance.put(url,payload);
+        }else if(RemoteClient.instance instanceof WebSocketClient){
+
+            let data = {
+                method:"PUT",
+                url :url,
+                payload:payload
+            }
+            
+            RemoteClient.instance.send(JSON.stringify(data));
         }
-        let fetchPromise = fetch(`${this.baseUrl}/${url}`,options);
-        return Observable.from(fetchPromise);
     }
 
     delete(url,options){
-        //console.log("POST");
+        // IMPLEMENTATION PENDING
     }
 
     head(url,options){
-        //console.log("HEAD");
+        // IMPLEMENTATION PENDING
     }
 
-
 }
+RemoteClient.instance = null;
 
-let rc  = new RemoteClient("https://jsonplaceholder.typicode.com");
-export {rc as RemoteClient};
-
-
-class RemoteInterceptors{
-    
-
-}
+let rcInstance = new RemoteClient.getInstance();
+export {rcInstance as RemoteClient}
